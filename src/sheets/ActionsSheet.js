@@ -2,6 +2,7 @@ import React, { forwardRef, useCallback, useMemo } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { BottomSheetModal, BottomSheetView } from "@gorhom/bottom-sheet";
 import { Ionicons } from "@expo/vector-icons";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { SheetBackdrop } from "../components/SheetBackdrop";
 import { SheetHeader } from "../components/SheetHeader";
@@ -18,6 +19,7 @@ const ACTIONS = [
 // Modelo 2 — Action Sheet modal, altura fixa, lista de opções com ícone.
 // É o padrão de menu de contexto (equivalente ao ActionSheetIOS nativo).
 export const ActionsSheet = forwardRef(function ActionsSheet(_, ref) {
+  const insets = useSafeAreaInsets();
   const snapPoints = useMemo(() => ["46%"], []);
 
   const renderBackdrop = useCallback((props) => <SheetBackdrop {...props} />, []);
@@ -30,12 +32,13 @@ export const ActionsSheet = forwardRef(function ActionsSheet(_, ref) {
     <BottomSheetModal
       ref={ref}
       snapPoints={snapPoints}
+      bottomInset={insets.bottom}
       backdropComponent={renderBackdrop}
       backgroundStyle={sheetBackgroundStyle}
       handleIndicatorStyle={sheetHandleIndicatorStyle}
       handleStyle={sheetHandleStyle}
     >
-      <BottomSheetView style={styles.content}>
+      <BottomSheetView style={[styles.content, { paddingBottom: insets.bottom }]}>
         <SheetHeader title="105 FM" onClose={() => ref?.current?.dismiss()} />
         <Text style={styles.subtitle}>O que você quer fazer com essa estação?</Text>
 

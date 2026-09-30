@@ -2,6 +2,7 @@ import React, { forwardRef, useCallback, useMemo, useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { BottomSheetModal, BottomSheetTextInput, BottomSheetView } from "@gorhom/bottom-sheet";
 import { Ionicons } from "@expo/vector-icons";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { SheetBackdrop } from "../components/SheetBackdrop";
 import { SheetHeader } from "../components/SheetHeader";
@@ -12,6 +13,7 @@ import { sheetBackgroundStyle, sheetHandleIndicatorStyle, sheetHandleStyle } fro
 // TextInput padrão do RN) para o teclado empurrar a sheet corretamente,
 // com keyboardBehavior="interactive" para acompanhar o teclado ao abrir.
 export const FormSheet = forwardRef(function FormSheet(_, ref) {
+  const insets = useSafeAreaInsets();
   const snapPoints = useMemo(() => ["65%"], []);
   const [name, setName] = useState("");
   const [message, setMessage] = useState("");
@@ -35,6 +37,7 @@ export const FormSheet = forwardRef(function FormSheet(_, ref) {
     <BottomSheetModal
       ref={ref}
       snapPoints={snapPoints}
+      bottomInset={insets.bottom}
       backdropComponent={renderBackdrop}
       backgroundStyle={sheetBackgroundStyle}
       handleIndicatorStyle={sheetHandleIndicatorStyle}
@@ -43,7 +46,7 @@ export const FormSheet = forwardRef(function FormSheet(_, ref) {
       keyboardBlurBehavior="restore"
       android_keyboardInputMode="adjustResize"
     >
-      <BottomSheetView style={styles.content}>
+      <BottomSheetView style={[styles.content, { paddingBottom: insets.bottom }]}>
         <SheetHeader title="Sugerir uma rádio" onClose={() => ref?.current?.dismiss()} />
 
         {sent ? (

@@ -2,6 +2,7 @@ import React, { forwardRef, useCallback, useImperativeHandle, useMemo, useRef, u
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import BottomSheet, { BottomSheetView } from "@gorhom/bottom-sheet";
 import { Ionicons } from "@expo/vector-icons";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { colors, radius, spacing, typography } from "../theme/theme";
 import { sheetBackgroundStyle, sheetHandleIndicatorStyle, sheetHandleStyle } from "../theme/sheetStyles";
@@ -10,6 +11,7 @@ import { sheetBackgroundStyle, sheetHandleIndicatorStyle, sheetHandleStyle } fro
 // É o padrão usado pelo mini-player do Spotify/YouTube Music: fica recolhida
 // como uma barrinha e expande pra tela cheia ao arrastar ou tocar.
 export const ClassicPlayerSheet = forwardRef(function ClassicPlayerSheet(_, ref) {
+  const insets = useSafeAreaInsets();
   const sheetRef = useRef(null);
   const [sheetIndex, setSheetIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(true);
@@ -32,12 +34,13 @@ export const ClassicPlayerSheet = forwardRef(function ClassicPlayerSheet(_, ref)
       index={0}
       snapPoints={snapPoints}
       onChange={setSheetIndex}
+      bottomInset={insets.bottom}
       backgroundStyle={sheetBackgroundStyle}
       handleIndicatorStyle={sheetHandleIndicatorStyle}
       handleStyle={sheetHandleStyle}
       enablePanDownToClose={false}
     >
-      <BottomSheetView style={styles.content}>
+      <BottomSheetView style={[styles.content, expanded && { paddingBottom: insets.bottom }]}>
         {expanded ? (
           <View style={styles.expandedContainer}>
             <Pressable onPress={() => sheetRef.current?.snapToIndex(0)} style={styles.collapseHint}>

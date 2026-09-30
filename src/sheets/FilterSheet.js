@@ -7,6 +7,7 @@ import {
   BottomSheetView,
 } from "@gorhom/bottom-sheet";
 import { Ionicons } from "@expo/vector-icons";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { SheetBackdrop } from "../components/SheetBackdrop";
 import { SheetHeader } from "../components/SheetHeader";
@@ -32,6 +33,7 @@ const GENRES = [
 // múltiplos snap points + rodapé fixo (BottomSheetFooter) com o botão de
 // ação, que fica sempre visível mesmo quando a lista rola por baixo dele.
 export const FilterSheet = forwardRef(function FilterSheet(_, ref) {
+  const insets = useSafeAreaInsets();
   const snapPoints = useMemo(() => ["55%", "90%"], []);
   const [selected, setSelected] = useState(() => new Set(["Sertanejo", "Pop"]));
 
@@ -58,13 +60,14 @@ export const FilterSheet = forwardRef(function FilterSheet(_, ref) {
         </View>
       </BottomSheetFooter>
     ),
-    [selected.size, ref]
+    [selected.size, ref, insets.bottom]
   );
 
   return (
     <BottomSheetModal
       ref={ref}
       snapPoints={snapPoints}
+      bottomInset={insets.bottom}
       backdropComponent={renderBackdrop}
       backgroundStyle={sheetBackgroundStyle}
       handleIndicatorStyle={sheetHandleIndicatorStyle}
@@ -74,7 +77,9 @@ export const FilterSheet = forwardRef(function FilterSheet(_, ref) {
       <BottomSheetView style={styles.headerWrapper}>
         <SheetHeader title="Filtrar por gênero" onClose={() => ref?.current?.dismiss()} />
       </BottomSheetView>
-      <BottomSheetScrollView contentContainerStyle={styles.scrollContent}>
+      <BottomSheetScrollView
+        contentContainerStyle={[styles.scrollContent, { paddingBottom: 100 + insets.bottom }]}
+      >
         {GENRES.map((genre) => {
           const isSelected = selected.has(genre);
           return (

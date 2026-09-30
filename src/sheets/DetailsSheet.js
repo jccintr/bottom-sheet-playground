@@ -2,6 +2,7 @@ import React, { forwardRef, useCallback, useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { BottomSheetModal, BottomSheetView } from "@gorhom/bottom-sheet";
 import { Ionicons } from "@expo/vector-icons";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { SheetBackdrop } from "../components/SheetBackdrop";
 import { SheetHeader } from "../components/SheetHeader";
@@ -22,6 +23,7 @@ const TAGS = ["Esportes", "Rap", "Samba e Pagode"];
 // ajusta automaticamente ao conteúdo (enableDynamicSizing). Ao expandir a
 // descrição, a sheet recalcula e anima a própria altura sozinha.
 export const DetailsSheet = forwardRef(function DetailsSheet(_, ref) {
+  const insets = useSafeAreaInsets();
   const [expanded, setExpanded] = useState(false);
 
   const renderBackdrop = useCallback((props) => <SheetBackdrop {...props} />, []);
@@ -30,13 +32,14 @@ export const DetailsSheet = forwardRef(function DetailsSheet(_, ref) {
     <BottomSheetModal
       ref={ref}
       enableDynamicSizing
+      bottomInset={insets.bottom}
       backdropComponent={renderBackdrop}
       backgroundStyle={sheetBackgroundStyle}
       handleIndicatorStyle={sheetHandleIndicatorStyle}
       handleStyle={sheetHandleStyle}
       onDismiss={() => setExpanded(false)}
     >
-      <BottomSheetView style={styles.content}>
+      <BottomSheetView style={[styles.content, { paddingBottom: spacing.xl + insets.bottom }]}>
         <SheetHeader title="105 FM" onClose={() => ref?.current?.dismiss()} />
 
         <View style={styles.tagsRow}>

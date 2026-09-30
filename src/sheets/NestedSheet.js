@@ -2,6 +2,7 @@ import React, { forwardRef, useCallback, useMemo, useRef } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { BottomSheetModal, BottomSheetView } from "@gorhom/bottom-sheet";
 import { Ionicons } from "@expo/vector-icons";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { SheetBackdrop } from "../components/SheetBackdrop";
 import { SheetHeader } from "../components/SheetHeader";
@@ -13,6 +14,7 @@ import { sheetBackgroundStyle, sheetHandleIndicatorStyle, sheetHandleStyle } fro
 // app inteiro, basta ter uma segunda ref/modal independente — o gorhom lida
 // com a pilha (a de cima fecha primeiro ao arrastar ou apertar voltar).
 export const NestedSheet = forwardRef(function NestedSheet(_, ref) {
+  const insets = useSafeAreaInsets();
   const confirmRef = useRef(null);
   const snapPoints = useMemo(() => ["40%"], []);
   const confirmSnapPoints = useMemo(() => ["34%"], []);
@@ -24,12 +26,13 @@ export const NestedSheet = forwardRef(function NestedSheet(_, ref) {
       <BottomSheetModal
         ref={ref}
         snapPoints={snapPoints}
+        bottomInset={insets.bottom}
         backdropComponent={renderBackdrop}
         backgroundStyle={sheetBackgroundStyle}
         handleIndicatorStyle={sheetHandleIndicatorStyle}
         handleStyle={sheetHandleStyle}
       >
-        <BottomSheetView style={styles.content}>
+        <BottomSheetView style={[styles.content, { paddingBottom: insets.bottom }]}>
           <SheetHeader title="Remover do histórico" onClose={() => ref?.current?.dismiss()} />
           <View style={styles.iconWrapper}>
             <Ionicons name="trash-outline" size={28} color={colors.danger} />
@@ -53,12 +56,13 @@ export const NestedSheet = forwardRef(function NestedSheet(_, ref) {
       <BottomSheetModal
         ref={confirmRef}
         snapPoints={confirmSnapPoints}
+        bottomInset={insets.bottom}
         backdropComponent={renderBackdrop}
         backgroundStyle={sheetBackgroundStyle}
         handleIndicatorStyle={sheetHandleIndicatorStyle}
         handleStyle={sheetHandleStyle}
       >
-        <BottomSheetView style={styles.content}>
+        <BottomSheetView style={[styles.content, { paddingBottom: insets.bottom }]}>
           <View style={[styles.iconWrapper, styles.iconWrapperWarning]}>
             <Ionicons name="warning-outline" size={26} color={colors.warning} />
           </View>
