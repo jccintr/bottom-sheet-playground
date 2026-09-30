@@ -1,0 +1,18 @@
+{
+  "expo": {
+    "name": "BottomSheet Playground",
+    "slug": "bottomsheet-playground",
+    "scheme": "bsplayground",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "dark",
+    "newArchEnabled": true,
+    "assetBundlePatterns": ["**/*"],
+    "android": {
+      "package": "com.julio.bottomsheetplayground"
+    },
+    "ios": {
+      "bundleIdentifier": "com.julio.bottomsheetplayground"
+    }
+  }
+}
